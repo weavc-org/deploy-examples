@@ -25,6 +25,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./services
-          file: Dockerfile.web
+          file: {context}/Dockerfile.web
           push: true
           tags: weavc/deploy-examples-web:latest
