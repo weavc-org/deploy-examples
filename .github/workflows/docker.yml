@@ -4,7 +4,7 @@ name: Docker Build and Push
 on: 
   push:
     branches:
-    - "*"
+    - "master"
     release:
       types: [published]
     
@@ -13,14 +13,25 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish ghcr
         uses: docker/build-push-action@v2
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: ghcr.io
-          repository: weavc/deploy-examples
           context: ./services
-          dockerfile: Dockerfile.web
+          file: ./services/Dockerfile.web
           push: true
-          tags: weavc/deploy-examples-web:latest
+          tags: ghcr.io/weavc/deploy-examples-web:latest
+      - name: Publish ghcr
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services
+          file: ./services/Dockerfile.logger
+          push: true
+          tags: ghcr.io/weavc/deploy-examples-logger:latest
