@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 5000
 
-ENTRYPOINT ["python", "-m", "src.logger"]
+ENTRYPOINT ["python3", "-m", "src.logger"]
