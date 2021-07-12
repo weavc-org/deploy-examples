@@ -1,12 +1,12 @@
-version: "3.9"
+version: "3"
 services:
 
   # global python server to load balance over
   web:
+    image: web
     build: 
       context: ./services/
       dockerfile: Dockerfile.web
-    container_name: web
     # bind to port 80 of host
     ports:
       - "80:5000"
@@ -20,10 +20,10 @@ services:
 
   # database logging service
   logger:
+    image: logger
     build: 
       context: ./services/
       dockerfile: Dockerfile.logger
-    container_name: logger
     # replicate over zones, zones could be datacenters or contries
     # however we decide to tag them
     deploy:
@@ -31,8 +31,8 @@ services:
       replicas: 3
       placement:
         max_replicas_per_node: 1
-      preferences:
-        - spread: node.labels.zone
+      # preferences:
+      #   - spread: node.labels.zone
     # attach to frontend & database overlay network 
     # can communicated with db and web services
     networks: 
@@ -42,7 +42,6 @@ services:
   # single instance of database
   db:
     image: postgres
-    container_name: postgres
     environment: 
       POSTGRES_PASSWORD: password
       POSTGRES_DB: service-test-db
