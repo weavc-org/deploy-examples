@@ -7,6 +7,8 @@ services:
     # bind to port 80 of host
     ports:
       - "80:5000"
+    environment:
+      LOGGER_ADDRESS: http://logger:5001
     # create a single replica on every node
     deploy:
       mode: replicated
@@ -19,6 +21,8 @@ services:
   # database logging service
   logger:
     image: ghcr.io/weavc/deploy-examples-logger:latest
+    ports:
+      - "81:5001"
     # replicate over zones, zones could be datacenters or contries
     # however we decide to tag them
     deploy:
@@ -51,7 +55,7 @@ services:
     image: postgres
     environment: 
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: service-test-db
+      POSTGRES_DB: deploy-examples
     deploy:
       # deploy 1 replica on node labeled database=yes
       mode: replicated
