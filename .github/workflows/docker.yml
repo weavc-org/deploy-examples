@@ -29,7 +29,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish ghcr
+      - name: Build & Publish Web
         uses: docker/build-push-action@v2
         with:
           context: ./services
@@ -37,8 +37,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/weavc/deploy-examples-web:latest
-          
-      - name: Publish ghcr
+
+      - name: Build & Publish Logger
         uses: docker/build-push-action@v2
         with:
           context: ./services
