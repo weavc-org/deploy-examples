@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+
+  # global python server to load balance over
+  web:
+    build: 
+      context: ./services/
+      dockerfile: Dockerfile.web
+    container_name: web
+    # bind to port 80 of host
+    ports:
+      - "80:5000"
+    # create a single replica on every node
+    deploy:
+      mode: global
+    # attach to frontend overlay network
+    # can communicate with log service, but not database
+    networks: 
+      - "frontend"
+
+  # database logging service
+  logger:
+    build: 
+      context: ./services/
+      dockerfile: Dockerfile.logger
+    container_name: logger
+    # replicate over zones, zones could be datacenters or contries
+    # however we decide to tag them
+    deploy:
+      mode: replicated
+      replicas: 3
+      placement:
+        max_replicas_per_node: 1
+      preferences:
+        - spread: node.labels.zone
+    # attach to frontend & database overlay network 
+    # can communicated with db and web services
+    networks: 
+      - "frontend"
+      - "database"
+
+  # single instance of database
+  db:
+    image: postgres
+    container_name: postgres
+    environment: 
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: service-test-db
+    deploy:
+      # deploy 1 replica on node labeled database=yes
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.labels.database==yes"
+    # attach to database overlay network,
+    # can communicated with log service
+    networks: 
+      - "frontend"
+      - "database"
+      
+networks:
+  frontend:
+    driver: overlay
+    attachable: true
+  database:
+    driver: overlay
+    attachable: true
+          

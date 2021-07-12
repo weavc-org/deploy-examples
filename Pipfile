@@ -1,0 +1,11 @@
+[requires]
+python_version = "3.9"
+
+[packages]
+flask = "*"
+psycopg2 = "*"
+sqlalchemy = "*"
+requests = "*"
+
+[dev-packages]
+pylint = "*"
