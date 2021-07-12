@@ -15,3 +15,7 @@ class Log(Base):
         self.host = host
         self.message = message
         self.date = date
+
+    def __repr__(self):
+       return "<Log(id='%s' host='%s', message='%s', date='%s')>" % (
+            self.id, self.host, self.message, self.date)

@@ -23,7 +23,7 @@ services:
     - service-dev
     environment: 
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: service-test-db
+      POSTGRES_DB: deploy-examples
 
 networks: 
     service-dev:
