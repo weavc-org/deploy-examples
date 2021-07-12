@@ -1,0 +1,26 @@
+
+name: Docker Build and Push
+
+on: 
+  push:
+    branches:
+    - "*"
+    release:
+      types: [published]
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish ghcr
+        uses: docker/build-push-action@v2
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          repository: weavc/deploy-examples
+          context: ./services
+          dockerfile: Dockerfile.web
+          push: true
+          tags: weavc/deploy-examples-web:latest
