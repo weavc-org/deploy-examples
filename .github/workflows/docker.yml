@@ -28,3 +28,10 @@ jobs:
           file: ./services/Dockerfile.web
           push: true
           tags: ghcr.io/weavc/deploy-examples-web:latest
+      - name: Publish ghcr
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services
+          file: ./services/Dockerfile.logger
+          push: true
+          tags: ghcr.io/weavc/deploy-examples-logger:latest
