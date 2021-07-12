@@ -9,7 +9,8 @@ services:
       - "80:5000"
     # create a single replica on every node
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 10
     # attach to frontend overlay network
     # can communicate with log service, but not database
     networks: 
@@ -33,8 +34,20 @@ services:
       - "frontend"
       - "database"
 
+  network-tools:
+    image: praqma/network-multitool
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks: 
+      - "frontend"
+      - "database"
+
   # single instance of database
-  db:
+  postgres:
     image: postgres
     environment: 
       POSTGRES_PASSWORD: password
