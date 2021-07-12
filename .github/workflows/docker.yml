@@ -27,4 +27,4 @@ jobs:
           context: ./services
           file: ./services/Dockerfile.web
           push: true
-          tags: weavc/deploy-examples-web:latest
+          tags: ghcr.io/weavc/deploy-examples-web:latest
