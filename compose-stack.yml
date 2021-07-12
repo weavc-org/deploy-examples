@@ -3,10 +3,7 @@ services:
 
   # global python server to load balance over
   web:
-    image: web
-    build: 
-      context: ./services/
-      dockerfile: Dockerfile.web
+    image: ghcr.io/weavc/deploy-examples-web:latest
     # bind to port 80 of host
     ports:
       - "80:5000"
@@ -20,17 +17,14 @@ services:
 
   # database logging service
   logger:
-    image: logger
-    build: 
-      context: ./services/
-      dockerfile: Dockerfile.logger
+    image: ghcr.io/weavc/deploy-examples-logger:latest
     # replicate over zones, zones could be datacenters or contries
     # however we decide to tag them
     deploy:
       mode: replicated
       replicas: 3
-      placement:
-        max_replicas_per_node: 1
+      # placement:
+      #   max_replicas_per_node: 1
       # preferences:
       #   - spread: node.labels.zone
     # attach to frontend & database overlay network 
@@ -61,8 +55,6 @@ services:
 networks:
   frontend:
     driver: overlay
-    attachable: true
   database:
     driver: overlay
-    attachable: true
           
