@@ -1,25 +1,28 @@
-from flask import Flask
 import socket
 import requests
 import os
+import json
+from flask import Flask
+from ..config import SharedConfig
 
 app = Flask(__name__)
-
-logger = os.getenv("LOGGER_ADDRESS", default="http://localhost:5001")
-address = os.getenv("LADDRESS", default="0.0.0.0")
-port = os.getenv("LPORT", default=5000)
+config = SharedConfig()
 
 @app.route("/")
-def hello_world():
+def index():
     result = log_request()
     hostname = socket.gethostname()
     return f"<p>Hello!</p><p>host: {hostname}</p><p>{result}</p>"
+
+@app.route("/config")
+def get_config():
+    return config.to_json()
 
 def log_request() -> str :
     # make request to logger service
     try:
         r = requests.post(
-            f"{logger}/log", 
+            f"{config.web.logger_address}/log", 
             json={"host": socket.gethostname(), "message": "request recieved"})
 
         # handle result
@@ -31,9 +34,9 @@ def log_request() -> str :
             r.close()
             return "log unsuccessful"
 
-    except Exception:
-        print("an error occured while sending the log")
+    except Exception as err:
+        print(f"an error occured while sending the log: {err}")
         return "log unsuccessful"
 
 if (__name__ == "__main__"):
-    app.run(host=address, port=port)
+    app.run(host=config.web.address, port=config.web.port)
