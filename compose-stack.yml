@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
 
   # global python server to load balance over
@@ -7,8 +7,6 @@ services:
     # bind to port 80 of host
     ports:
       - "80:5000"
-    environment:
-      LOGGER_ADDRESS: http://logger:5001
     # create a single replica on every node
     deploy:
       mode: replicated
@@ -18,7 +16,8 @@ services:
     networks: 
       - frontend
     configs:
-      - shared_config.ini
+      - source: shared_config.ini
+        target: /shared_config.ini
 
   # database logging service
   logger:
@@ -32,6 +31,8 @@ services:
       replicas: 3
       placement:
         max_replicas_per_node: 1
+      restart_policy:
+        condition: on-failure
       # preferences:
       #   - spread: node.labels.zone
     # attach to frontend & database overlay network 
@@ -40,7 +41,8 @@ services:
       - frontend
       - database
     configs:
-      - shared_config.ini
+      - source: shared_config.ini
+        target: /shared_config.ini
 
   network-tools:
     image: praqma/network-multitool
@@ -70,8 +72,8 @@ services:
     # attach to database overlay network,
     # can communicated with log service
     networks: 
-      - "frontend"
-      - "database"
+      - frontend
+      - database
       
 networks:
   frontend:
