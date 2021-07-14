@@ -16,27 +16,31 @@ services:
     # attach to frontend overlay network
     # can communicate with log service, but not database
     networks: 
-      - "frontend"
+      - frontend
+    configs:
+      - shared_config.ini
 
   # database logging service
   logger:
     image: ghcr.io/weavc/deploy-examples-logger:latest
     ports:
-      - "81:5001"
+      - "81:5000"
     # replicate over zones, zones could be datacenters or contries
     # however we decide to tag them
     deploy:
       mode: replicated
       replicas: 3
-      # placement:
-      #   max_replicas_per_node: 1
+      placement:
+        max_replicas_per_node: 1
       # preferences:
       #   - spread: node.labels.zone
     # attach to frontend & database overlay network 
     # can communicated with db and web services
     networks: 
-      - "frontend"
-      - "database"
+      - frontend
+      - database
+    configs:
+      - shared_config.ini
 
   network-tools:
     image: praqma/network-multitool
@@ -47,8 +51,8 @@ services:
         constraints:
           - "node.role==manager"
     networks: 
-      - "frontend"
-      - "database"
+      - frontend
+      - database
 
   # single instance of database
   postgres:
@@ -74,4 +78,8 @@ networks:
     driver: overlay
   database:
     driver: overlay
+
+configs:
+  shared_config.ini:
+    file: ./shared_config.ini
           
