@@ -1,12 +1,32 @@
 version: "3.8"
 services:
 
-  # global python server to load balance over
+  nginx:
+    image: ghcr.io/weavc/weavc-nginx:latest
+    # bind to port 80 of host
+    ports:
+      - "80:80"
+      - "443:443"
+    # create a single replica on every node
+    deploy:
+      mode: replicated
+      replicas: 3
+    # attach to frontend overlay network
+    # can communicate with log service, but not database
+    networks: 
+      - frontend
+    configs:
+      - source: default.conf
+        target: /sites/default.conf
+      - source: logger.subdomain.conf
+        target: /sites/logger.subdomain.conf
+    secrets:
+      - fullchain.pem
+      - privkey.pem
+
   web:
     image: ghcr.io/weavc/deploy-examples-web:latest
     # bind to port 80 of host
-    ports:
-      - "80:5000"
     # create a single replica on every node
     deploy:
       mode: replicated
@@ -22,8 +42,6 @@ services:
   # database logging service
   logger:
     image: ghcr.io/weavc/deploy-examples-logger:latest
-    ports:
-      - "81:5000"
     # replicate over zones, zones could be datacenters or contries
     # however we decide to tag them
     deploy:
@@ -83,5 +101,17 @@ networks:
 
 configs:
   shared_config.ini:
-    file: ./shared_config.ini
+    file: ./configs/shared_config.ini
+  default.conf:
+    file: ./configs/sites/default.conf
+  logger.subdomain.conf:
+    file: ./configs/sites/logger.subdomain.conf
+
+secrets:
+  fullchain.pem:
+    file: ./secrets/fullchain.pem
+  privkey.pem:
+    file: ./secrets/privkey.pem
+  
+  
           
