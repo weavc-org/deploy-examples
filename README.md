@@ -1,6 +1,6 @@
 ### deploy-examples
 
-Testing continuous integration & deployment stragies using python, github actions & docker swarm. This is made to demonstrate a 'production-like' docker stack where we have multiple containers doing different jobs, replicas load balancing and containers communicating with one another via overlay networks.
+Testing continuous integration & deployment strategies using python, github actions & docker swarm. This is made to demonstrate a 'production-like' docker stack where we have multiple containers doing different jobs, replicas load balancing and containers communicating with one another via overlay networks.
 
 The stack consists of
 - nginx reverse proxy ([`weavc-nginx`](https://github.com/weavc/weavc-nginx))
