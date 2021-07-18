@@ -92,6 +92,10 @@ services:
     networks: 
       - frontend
       - database
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
       
 networks:
   frontend:
@@ -113,5 +117,6 @@ secrets:
   privkey.pem:
     file: ./secrets/privkey.pem
   
-  
+volumes:
+  postgres-data:
           
