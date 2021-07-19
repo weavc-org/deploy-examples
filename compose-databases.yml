@@ -22,8 +22,8 @@ services:
         source: postgres-data
         target: /var/lib/postgresql/data
     configs:
-      - source: 20-replication-setup.sh
-        target: /docker-entrypoint-initdb.d/20-replication-setup.sh
+      - source: 20-replication-user-setup.sh
+        target: /docker-entrypoint-initdb.d/20-replication-user-setup.sh
       - source: postgresql.conf
         target: /etc/postgresql/postgresql.conf
       - source: pg-hba.conf
@@ -50,8 +50,8 @@ services:
         source: postgres-replica
         target: /var/lib/postgresql/data
     configs:
-      - source: 20-replication-setup.sh
-        target: /docker-entrypoint-initdb.d/20-replication-setup.sh
+      - source: 20-replication-user-setup.sh
+        target: /docker-entrypoint-initdb.d/20-replication-user-setup.sh
       - source: 10-replication-restore.sh
         target: /docker-entrypoint-initdb.d/10-replication-restore.sh
       - source: postgresql.conf
@@ -65,14 +65,14 @@ networks:
     name: db-overlay
 
 configs:
-  20-replication-setup.sh:
-    file: ./postgresql/20-replication-user-setup.sh
+  20-replication-user-setup.sh:
+    file: ./configs/postgresql/20-replication-user-setup.sh
   10-replication-restore.sh:
-    file: ./postgresql/10-replication-restore.sh
+    file: ./configs/postgresql/10-replication-restore.sh
   postgresql.conf:
-    file: ./postgresql/postgresql.conf
+    file: ./configs/postgresql/postgresql.conf
   pg-hba.conf:
-    file: ./postgresql/pg_hba.conf
+    file: ./configs/postgresql/pg_hba.conf
 
 volumes:
   postgres-data:
