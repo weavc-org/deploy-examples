@@ -1,18 +1,17 @@
 version: "3.8"
 services:
 
+  # Nginx reverse proxy with SSL
+  # Handles incoming requests and forwards them through to 
+  # other containers
   nginx:
     image: ghcr.io/weavc/weavc-nginx:latest
-    # bind to port 80 of host
     ports:
       - "80:80"
       - "443:443"
-    # create a single replica on every node
     deploy:
       mode: replicated
       replicas: 3
-    # attach to frontend overlay network
-    # can communicate with log service, but not database
     networks: 
       - frontend
     configs:
@@ -24,26 +23,21 @@ services:
       - fullchain.pem
       - privkey.pem
 
+  # Frontend web service
   web:
     image: ghcr.io/weavc/deploy-examples-web:latest
-    # bind to port 80 of host
-    # create a single replica on every node
     deploy:
       mode: replicated
       replicas: 10
-    # attach to frontend overlay network
-    # can communicate with log service, but not database
     networks: 
       - frontend
     configs:
       - source: shared_config.ini
         target: /shared_config.ini
 
-  # database logging service
+  # Backend API web service
   logger:
     image: ghcr.io/weavc/deploy-examples-logger:latest
-    # replicate over zones, zones could be datacenters or contries
-    # however we decide to tag them
     deploy:
       mode: replicated
       replicas: 3
@@ -51,17 +45,16 @@ services:
         max_replicas_per_node: 1
       restart_policy:
         condition: on-failure
-      # preferences:
-      #   - spread: node.labels.zone
-    # attach to frontend & database overlay network 
-    # can communicated with db and web services
     networks: 
       - frontend
-      - database
+      - db-overlay
     configs:
       - source: shared_config.ini
         target: /shared_config.ini
 
+  # Network tools
+  # Tools to help test our docker network
+  # IPerf, ping, tracert, curl etc
   network-tools:
     image: praqma/network-multitool
     deploy:
@@ -72,12 +65,13 @@ services:
           - "node.role==manager"
     networks: 
       - frontend
-      - database
+      - db-overlay
       
 networks:
   frontend:
     driver: overlay
-  database:
+  # internal database network from 'compose-databases.yml'
+  db-overlay:
     external: true
     name: db-overlay
 
