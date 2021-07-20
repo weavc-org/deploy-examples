@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row">
+    
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Logs</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Host: {{ hostname }}</h6>
+          <hr/>
+          {% if logs %}
+          <ul class="list-group">
+            {% for log in logs %}
+            <li class="list-group-item">[{{ log.date }}] ({{ log.host }}) {{ log.message }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <form method="post">
+            <label for="message" class="form-label fw-bold">Message</label>
+            <input class="form-control mb-3" name="message" id="message" required>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
