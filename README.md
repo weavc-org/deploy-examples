@@ -6,8 +6,8 @@ Over time I would like to incorporate more of the docker swarm features and expl
 
 ### Stack
 - nginx reverse proxy ([`weavc-nginx`](https://github.com/weavc/weavc-nginx))
-- python web frontend (see `services/src/web`)
-- python logger api (see `services/src/logger`)
-- postgres database with replica sets (see `postgresql/`)
+- python web frontend (see `services/`)
+- python logger api (see `services/`)
+- postgres database with replica sets
 - network tools for testing (`praqma/network-multitool`)
 
