@@ -12,6 +12,10 @@ services:
     deploy:
       mode: replicated
       replicas: 3
+      placement:
+        max_replicas_per_node: 1
+      restart_policy:
+        condition: on-failure
     networks: 
       - frontend
     configs:
@@ -28,7 +32,11 @@ services:
     image: ghcr.io/weavc/deploy-examples-web:latest
     deploy:
       mode: replicated
-      replicas: 10
+      replicas: 3
+      placement:
+        max_replicas_per_node: 1
+      restart_policy:
+        condition: on-failure
     networks: 
       - frontend
     configs:
