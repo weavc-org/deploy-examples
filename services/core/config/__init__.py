@@ -50,7 +50,7 @@ class SharedConfig():
         # initialize parser
         self.raw_parser = configparser.SafeConfigParser()
         # read from configs, last overrides first
-        self.raw_parser.read(["./src/defaults.ini", "./src/config.ini", "/shared_config.ini"])
+        self.raw_parser.read(["./defaults.ini", "./config.ini", "/shared_config.ini"])
 
         # set section values
         self.database = DatabaseConfig(**self.raw_parser['database'])    
