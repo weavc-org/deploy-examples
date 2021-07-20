@@ -2,17 +2,18 @@ import socket
 import requests
 import os
 import json
-from flask import Flask
+import flask
 from ..config import SharedConfig
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 config = SharedConfig()
 
 @app.route("/")
 def index():
     result = log_request()
     hostname = socket.gethostname()
-    return f"<p>Hello!</p><p>host: {hostname}</p><p>{result}</p>"
+    model = { 'message': 'hello?' }
+    return flask.render_template('log.html', model=model)
 
 @app.route("/config")
 def get_config():

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form method="post">
+    <label for="message">Message</label>
+    <input name="message" id="message" required>
+  </form>
+
+  {{ model.message }}
+{% endblock %}
