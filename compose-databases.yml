@@ -1,15 +1,16 @@
 version: "3.8"
 services:
 
-  # single instance of database
+  # Master Postgres DB
+  # There should only be 1 of these 
+  # located on the node with the database=master label 
   postgres:
     image: postgres
     command: "-c 'config_file=/etc/postgresql/postgresql.conf' -c 'hba_file=/etc/postgresql/pg_hba.conf'"
-    environment: 
+    environment:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: deploy-examples
     deploy:
-      # deploy 1 replica on node labeled database=master
       mode: replicated
       replicas: 1
       placement:
@@ -22,13 +23,15 @@ services:
         source: postgres-data
         target: /var/lib/postgresql/data
     configs:
-      - source: 20-replication-setup.sh
-        target: /docker-entrypoint-initdb.d/20-replication-setup.sh
+      - source: 20-replication-user-setup.sh
+        target: /docker-entrypoint-initdb.d/20-replication-user-setup.sh
       - source: postgresql.conf
         target: /etc/postgresql/postgresql.conf
       - source: pg-hba.conf
         target: /etc/postgresql/pg_hba.conf
 
+  # Replica DB(s), can have multiple of these
+  # Key difference is the '10-replication-restore.sh' config file and no database env variable
   pg-replica:
     image: postgres
     command: "-c 'config_file=/etc/postgresql/postgresql.conf' -c 'hba_file=/etc/postgresql/pg_hba.conf'"
@@ -50,8 +53,8 @@ services:
         source: postgres-replica
         target: /var/lib/postgresql/data
     configs:
-      - source: 20-replication-setup.sh
-        target: /docker-entrypoint-initdb.d/20-replication-setup.sh
+      - source: 20-replication-user-setup.sh
+        target: /docker-entrypoint-initdb.d/20-replication-user-setup.sh
       - source: 10-replication-restore.sh
         target: /docker-entrypoint-initdb.d/10-replication-restore.sh
       - source: postgresql.conf
@@ -65,14 +68,14 @@ networks:
     name: db-overlay
 
 configs:
-  20-replication-setup.sh:
-    file: ./postgresql/20-replication-user-setup.sh
+  20-replication-user-setup.sh:
+    file: ./configs/postgresql/20-replication-user-setup.sh
   10-replication-restore.sh:
-    file: ./postgresql/10-replication-restore.sh
+    file: ./configs/postgresql/10-replication-restore.sh
   postgresql.conf:
-    file: ./postgresql/postgresql.conf
+    file: ./configs/postgresql/postgresql.conf
   pg-hba.conf:
-    file: ./postgresql/pg_hba.conf
+    file: ./configs/postgresql/pg_hba.conf
 
 volumes:
   postgres-data:
