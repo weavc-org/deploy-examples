@@ -36,7 +36,8 @@ jobs:
           file: ./services/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          build-args: ['PYTHON_MODULE=web']
+          build-args: 
+            - PYTHON_MODULE=web
           tags: ghcr.io/weavc/deploy-examples-web:latest
 
       - name: Build & Publish Logger
@@ -46,5 +47,6 @@ jobs:
           file: ./services/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          build-args: ['PYTHON_MODULE=logger']
+          build-args: 
+            - PYTHON_MODULE=logger
           tags: ghcr.io/weavc/deploy-examples-logger:latest
