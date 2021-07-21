@@ -94,7 +94,6 @@ services:
       - source: prometheus.yml
         target: /etc/prometheus/prometheus.yml
 
-      /etc/prometheus/prometheus.yml
 networks:
   frontend:
     driver: overlay
