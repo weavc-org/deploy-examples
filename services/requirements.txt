@@ -2,3 +2,4 @@ Flask==2.0.1
 psycopg2==2.9.1
 requests==2.25.1
 SQLAlchemy==1.4.20
+prometheus-client==0.11.0
