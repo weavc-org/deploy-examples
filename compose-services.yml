@@ -74,7 +74,27 @@ services:
     networks: 
       - frontend
       - db-overlay
-      
+
+  prometheus:
+    image: prom/prometheus
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks: 
+      - frontend
+      - db-overlay
+    volumes:
+      - type: volume
+        source: prometheus-data
+        target: /data
+    configs:
+      - source: prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+
+      /etc/prometheus/prometheus.yml
 networks:
   frontend:
     driver: overlay
@@ -90,9 +110,14 @@ configs:
     file: ./configs/sites/default.conf
   logger.subdomain.conf:
     file: ./configs/sites/logger.subdomain.conf
+  prometheus.yml:
+    file: ./configs/prometheus.yml
 
 secrets:
   fullchain.pem:
     file: ./secrets/fullchain.pem
   privkey.pem:
     file: ./secrets/privkey.pem
+
+volumes:
+  prometheus-data:
