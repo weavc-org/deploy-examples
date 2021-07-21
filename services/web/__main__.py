@@ -1,9 +1,14 @@
 import socket
 import flask
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from prometheus_client import make_wsgi_app
 from core.config import SharedConfig
 from core.client.logger import log_request, get_logs_request
 
 app = flask.Flask(__name__)
+app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
+    '/metrics': make_wsgi_app()
+})
 config = SharedConfig()
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -35,4 +40,5 @@ def get_logs() -> list:
         return []
 
 if (__name__ == '__main__'):
+
     app.run(host=config.web.address, port=config.web.port)
