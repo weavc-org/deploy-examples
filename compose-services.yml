@@ -23,6 +23,8 @@ services:
         target: /sites/default.conf
       - source: logger.subdomain.conf
         target: /sites/logger.subdomain.conf
+      - source: prometheus.subdomain.conf
+        target: /sites/prometheus.subdomain.conf
     secrets:
       - fullchain.pem
       - privkey.pem
@@ -109,6 +111,8 @@ configs:
     file: ./configs/sites/default.conf
   logger.subdomain.conf:
     file: ./configs/sites/logger.subdomain.conf
+  prometheus.subdomain.conf:
+    file: ./configs/sites/prometheus.subdomain.conf
   prometheus.yml:
     file: ./configs/prometheus.yml
 
