@@ -21,11 +21,25 @@ scrape_configs:
         type: A
         port: 5000
 
+  - job_name: 'node-metrics'
+    metrics_path: /metrics
+    dns_sd_configs:
+      - names:
+        - tasks.node-exporter
+        type: A
+        port: 9100
+
+
+  # Docker metrics
+  # Host discovery isn't really a thing without external dns etc
+  # so decided to go with node-exporter instead
+  
   # {
   #   "metrics-addr" : "0.0.0.0:9323",
   #   "experimental" : true
   # }
-  - job_name: 'node-metrics'
-    metrics_path: /metrics
-    static_configs:
-      - targets: ['192.168.99.201:9323', '192.168.99.211:9323', '192.168.99.212:9323']
+
+  # - job_name: 'node-metrics'
+  #   metrics_path: /metrics
+      # static_configs:
+      #   - targets: ['192.168.99.201:9323', '192.168.99.211:9323', '192.168.99.212:9323']

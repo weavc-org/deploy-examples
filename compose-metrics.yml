@@ -34,6 +34,21 @@ services:
         source: grafana-data
         target: /var/lib/grafana
 
+  node-exporter:
+    image: prom/node-exporter
+    deploy:
+      mode: global
+    command: ['--path.rootfs=/host']
+    networks: 
+      - metrics-overlay
+    volumes:
+      - type: bind
+        source: /
+        target: /host
+        read_only: true
+        bind:
+          propagation: rslave
+
 networks:
   metrics-overlay:
     name: metrics-overlay
