@@ -14,7 +14,7 @@ Vagrant.configure('2') do |config|
     end
     
     # define worker nodes
-    (1..2).each do |number|
+    (1..3).each do |number|
       config.vm.define "w#{number}" do |node|
         node.vm.network 'private_network', ip: "192.168.99.21#{number}"
         node.vm.network 'forwarded_port', id: 'ssh', host: "821#{number}", guest: "22"

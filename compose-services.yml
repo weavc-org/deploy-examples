@@ -16,8 +16,12 @@ services:
         max_replicas_per_node: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role!=manager"
     networks: 
-      - frontend
+      - web-overlay
+      - metrics-overlay
     configs:
       - source: default.conf
         target: /sites/default.conf
@@ -25,6 +29,8 @@ services:
         target: /sites/logger.subdomain.conf
       - source: prometheus.subdomain.conf
         target: /sites/prometheus.subdomain.conf
+      - source: grafana.subdomain.conf
+        target: /sites/grafana.subdomain.conf
     secrets:
       - fullchain.pem
       - privkey.pem
@@ -39,8 +45,12 @@ services:
         max_replicas_per_node: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role!=manager"
     networks: 
-      - frontend
+      - web-overlay
+      - metrics-overlay
     configs:
       - source: shared_config.ini
         target: /shared_config.ini
@@ -55,9 +65,13 @@ services:
         max_replicas_per_node: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role!=manager"
     networks: 
-      - frontend
+      - web-overlay
       - db-overlay
+      - metrics-overlay
     configs:
       - source: shared_config.ini
         target: /shared_config.ini
@@ -74,35 +88,20 @@ services:
         constraints:
           - "node.role==manager"
     networks: 
-      - frontend
+      - web-overlay
+      - metrics-overlay
       - db-overlay
 
-  prometheus:
-    image: prom/prometheus
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - "node.role==manager"
-    networks: 
-      - frontend
-      - db-overlay
-    volumes:
-      - type: volume
-        source: prometheus-data
-        target: /data
-    configs:
-      - source: prometheus.yml
-        target: /etc/prometheus/prometheus.yml
 
 networks:
-  frontend:
+  web-overlay:
     driver: overlay
-  # internal database network from 'compose-databases.yml'
   db-overlay:
     external: true
     name: db-overlay
+  metrics-overlay:
+    external: true
+    name: metrics-overlay
 
 configs:
   shared_config.ini:
@@ -113,14 +112,11 @@ configs:
     file: ./configs/sites/logger.subdomain.conf
   prometheus.subdomain.conf:
     file: ./configs/sites/prometheus.subdomain.conf
-  prometheus.yml:
-    file: ./configs/prometheus.yml
+  grafana.subdomain.conf:
+    file: ./configs/sites/grafana.subdomain.conf
 
 secrets:
   fullchain.pem:
     file: ./secrets/fullchain.pem
   privkey.pem:
     file: ./secrets/privkey.pem
-
-volumes:
-  prometheus-data:
