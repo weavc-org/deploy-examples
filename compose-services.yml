@@ -80,7 +80,7 @@ services:
   # Tools to help test our docker network
   # IPerf, ping, tracert, curl etc
   network-tools:
-    image: praqma/network-multitool
+    image: praqma/network-multitool:extra
     deploy:
       mode: replicated
       replicas: 1
