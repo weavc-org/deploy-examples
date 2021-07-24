@@ -29,16 +29,8 @@ services:
         target: /sites/logger.subdomain.conf
       - source: prometheus.subdomain.conf
         target: /sites/prometheus.subdomain.conf
-<<<<<<< HEAD
       - source: grafana.subdomain.conf
         target: /sites/grafana.subdomain.conf
-=======
-<<<<<<< HEAD
-      - source: grafana.subdomain.conf
-        target: /sites/grafana.subdomain.conf
-=======
->>>>>>> f56a2979152bb729aaa9332cd23d05cd47fd7e90
->>>>>>> 036fe951dcc82ed82b17d24362cf81cf1492d126
     secrets:
       - fullchain.pem
       - privkey.pem
