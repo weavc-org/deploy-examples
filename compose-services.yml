@@ -29,8 +29,16 @@ services:
         target: /sites/logger.subdomain.conf
       - source: prometheus.subdomain.conf
         target: /sites/prometheus.subdomain.conf
+<<<<<<< HEAD
       - source: grafana.subdomain.conf
         target: /sites/grafana.subdomain.conf
+=======
+<<<<<<< HEAD
+      - source: grafana.subdomain.conf
+        target: /sites/grafana.subdomain.conf
+=======
+>>>>>>> f56a2979152bb729aaa9332cd23d05cd47fd7e90
+>>>>>>> 036fe951dcc82ed82b17d24362cf81cf1492d126
     secrets:
       - fullchain.pem
       - privkey.pem
@@ -92,6 +100,31 @@ services:
       - metrics-overlay
       - db-overlay
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  prometheus:
+    image: prom/prometheus
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks: 
+      - frontend
+      - db-overlay
+    volumes:
+      - type: volume
+        source: prometheus-data
+        target: /data
+    configs:
+      - source: prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+>>>>>>> f56a2979152bb729aaa9332cd23d05cd47fd7e90
+
+>>>>>>> 036fe951dcc82ed82b17d24362cf81cf1492d126
 networks:
   web-overlay:
     driver: overlay
@@ -111,8 +144,18 @@ configs:
     file: ./configs/sites/logger.subdomain.conf
   prometheus.subdomain.conf:
     file: ./configs/sites/prometheus.subdomain.conf
+<<<<<<< HEAD
   grafana.subdomain.conf:
     file: ./configs/sites/grafana.subdomain.conf
+=======
+<<<<<<< HEAD
+  grafana.subdomain.conf:
+    file: ./configs/sites/grafana.subdomain.conf
+=======
+  prometheus.yml:
+    file: ./configs/prometheus.yml
+>>>>>>> f56a2979152bb729aaa9332cd23d05cd47fd7e90
+>>>>>>> 036fe951dcc82ed82b17d24362cf81cf1492d126
 
 secrets:
   fullchain.pem:

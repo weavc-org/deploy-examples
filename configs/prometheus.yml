@@ -38,7 +38,14 @@ scrape_configs:
   #   "experimental" : true
   # }
 
+
   # - job_name: 'node-metrics'
   #   metrics_path: /metrics
-      # static_configs:
-      #   - targets: ['192.168.99.201:9323', '192.168.99.211:9323', '192.168.99.212:9323']
+  # static_configs:
+  #   - targets: ['192.168.99.201:9323', '192.168.99.211:9323', '192.168.99.212:9323']
+
+  - job_name: 'node-metrics'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['192.168.99.201:9323', '192.168.99.211:9323', '192.168.99.212:9323']
+
