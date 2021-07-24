@@ -1,0 +1,63 @@
+version: "3.8"
+services:
+
+  prometheus:
+    image: prom/prometheus
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks: 
+      - metrics-overlay
+    volumes:
+      - type: volume
+        source: prometheus-data
+        target: /data
+    configs:
+      - source: prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks: 
+      - metrics-overlay
+    volumes:
+      - type: volume
+        source: grafana-data
+        target: /var/lib/grafana
+
+  node-exporter:
+    image: prom/node-exporter
+    deploy:
+      mode: global
+    command: ['--path.rootfs=/host']
+    networks: 
+      - metrics-overlay
+    volumes:
+      - type: bind
+        source: /
+        target: /host
+        read_only: true
+        bind:
+          propagation: rslave
+
+networks:
+  metrics-overlay:
+    name: metrics-overlay
+    driver: overlay
+
+configs:
+  prometheus.yml:
+    file: ./configs/prometheus.yml
+    
+volumes:
+  prometheus-data:
+  grafana-data:

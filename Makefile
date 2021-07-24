@@ -1,9 +1,21 @@
 
 deploy:
-	make deploy-db ; docker stack deploy -c compose-services.yml deploy-examples
+	make deploy-db & make deploy-metrics & make deploy-services
 
 vm-deploy:
-	make vm-deploy-db ; docker -c m1 stack deploy -c compose-services.yml deploy-examples
+	make vm-deploy-db & make vm-deploy-metrics & make vm-deploy-services
+
+deploy-services:
+	docker stack deploy -c ./compose-services.yml deploy-examples
+
+vm-deploy-services:
+	docker -c m1 stack deploy -c ./compose-services.yml deploy-examples
+
+deploy-metrics:
+	docker stack deploy -c ./compose-metrics.yml deploy-examples-metrics
+
+vm-deploy-metrics:
+	docker -c m1 stack deploy -c ./compose-metrics.yml deploy-examples-metrics
 
 deploy-db:
 	docker stack deploy -c ./compose-databases.yml deploy-examples-db

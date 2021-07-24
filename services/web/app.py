@@ -38,6 +38,3 @@ def get_logs() -> list:
         return logsResult[1]['logs']
     else: 
         return []
-
-if (__name__ == '__main__'):
-    app.run(host=config.web.address, port=config.web.port)
