@@ -56,7 +56,7 @@ networks:
 
 configs:
   prometheus.yml:
-    file: ./configs/prometheus.yml
+    file: ../configs/prometheus.yml
     
 volumes:
   prometheus-data:

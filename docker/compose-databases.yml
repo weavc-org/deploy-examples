@@ -69,13 +69,13 @@ networks:
 
 configs:
   20-replication-user-setup.sh:
-    file: ./configs/postgresql/20-replication-user-setup.sh
+    file: ../configs/postgresql/20-replication-user-setup.sh
   10-replication-restore.sh:
-    file: ./configs/postgresql/10-replication-restore.sh
+    file: ../configs/postgresql/10-replication-restore.sh
   postgresql.conf:
-    file: ./configs/postgresql/postgresql.conf
+    file: ../configs/postgresql/postgresql.conf
   pg-hba.conf:
-    file: ./configs/postgresql/pg_hba.conf
+    file: ../configs/postgresql/pg_hba.conf
 
 volumes:
   postgres-data:
