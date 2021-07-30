@@ -1,5 +1,7 @@
 FROM ubuntu
 
+WORKDIR /app
+
 # update & install required packages
 # libpq-dev & gcc required for building psycopg2
 RUN apt update && apt install -y python3 python3-pip libpq-dev gcc
