@@ -1,0 +1,24 @@
+apiVersion: v1
+data:
+  shared_config.ini: |-
+    [database]
+    user=postgres
+    password=password
+    db=deploy-examples
+    address=postgres
+
+    [web]
+    address=0.0.0.0
+    port=5000
+    logger_address=http://logger:5000
+
+    [logger]
+    address=0.0.0.0
+    port=5000
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2021-07-25T15:16:04Z"
+  name: shared-config
+  namespace: default
+  resourceVersion: "2044"
+  uid: 5c6055dd-8081-4f1c-9667-31a8a2c6313f
